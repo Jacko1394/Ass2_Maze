@@ -9,12 +9,5 @@
 hs_err_pid*
 
 out/
-.DS_Store
-.idea/Ass2_Maze.iml
-.idea/compiler.xml
-.idea/misc.xml
-.idea/modules.xml
-.idea/workspace.xml
-.idea/copyright/profiles_settings.xml
-.idea/inspectionProfiles/profiles_settings.xml
-.idea/inspectionProfiles/Project_Default.xml
+*.DS_Store
+.idea/
