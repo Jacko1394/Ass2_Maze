@@ -17,6 +17,7 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator {
 
 	//Constants:
 	static int[] sides;
+	//neat
 
 	@Override
 	public void generateMaze(Maze maze) {
