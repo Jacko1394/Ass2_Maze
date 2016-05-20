@@ -16,7 +16,7 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator {
 
 	Graph g = null;  //Graph structure to represent maze cell verticies
 	ArrayList<Cell> cells = new ArrayList<>();  //Arraylist of the maze cells
-	Stack<Cell> theStack = new Stack<>(); //stack dfs for big big mazes xD
+	Stack<Cell> cellStack = new Stack<>(); //stack dfs for big big mazes xD
 
 	@Override
 	public void generateMaze(Maze maze) {
@@ -28,9 +28,9 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator {
 
 		//Initialization of class values:
 		numOfCells = maze.sizeR * maze.sizeC;
-
 		firstCell = r.nextInt(numOfCells);
 		g = makeGraph(maze);
+
 		visited = new boolean[numOfCells];
 		for (int i = 0; i < visited.length; i++) { //init loop
 			visited[i] = false;
@@ -83,21 +83,21 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator {
 		int cellCount = 1;
 		boolean neighbors;
 		//Add first cell (random) to stack, set as visited:
-		theStack.push(cells.get(firstCell));
-		visited[cells.indexOf(theStack.peek())] = true;
+		cellStack.push(cells.get(firstCell));
+		visited[cells.indexOf(cellStack.peek())] = true;
 
 		//Loop until all cells are accounted for:
 		while(cellCount < numOfCells) {
 			//Get neighbors of top of stack cell:
-			int n[] = g.neighbours(cells.indexOf(theStack.peek()));
+			int n[] = g.neighbours(cells.indexOf(cellStack.peek()));
 			neighbors = false;  //Reset to false
 
 			//Check for tunnel:
-			if(theStack.peek().tunnelTo != null) {
+			if(cellStack.peek().tunnelTo != null) {
 				//Check if tunnel cell has been visited:
-				int t = cells.indexOf(theStack.peek().tunnelTo);
+				int t = cells.indexOf(cellStack.peek().tunnelTo);
 				if(!visited[t]) {
-					theStack.push(cells.get(t));
+					cellStack.push(cells.get(t));
 					visited[t] = true;
 					++cellCount;
 					continue;
@@ -107,8 +107,8 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator {
 			//If no tunnel, loop thru neighbor cells:
 			for(int i : n) {
 				if(!visited[i]) {
-					deleteWall(theStack.peek(), cells.get(i));
-					theStack.push(cells.get(i));
+					deleteWall(cellStack.peek(), cells.get(i));
+					cellStack.push(cells.get(i));
 					visited[i] = true;
 					++cellCount;
 					neighbors = true;
@@ -116,7 +116,8 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator {
 				}
 			}
 			//If all neighbors have been visited, pop that cell off the stack:
-			if(!neighbors) {theStack.pop();}
+			if(!neighbors) {
+				cellStack.pop();}
 		}
 	}
 

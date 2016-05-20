@@ -41,3 +41,29 @@
 	}
 
 
+//RECURSIVE SOLVER :::::::
+
+
+
+	//Recursive DFS method, that implements maze visualisation:
+	private boolean dfs(Cell c) {
+		maze.drawFtPrt(c);
+		//Check if exit found:
+		if(c == maze.exit) {
+			found = true;
+			return true;
+		}
+		//Continue recursion:
+		++cellCount;
+		visited.add(c);
+		ArrayList<Cell> n = getNeighbors(c);
+		for(Cell next : n) {
+			if(!visited.contains(next)) {
+				if(dfs(next)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
