@@ -6,6 +6,10 @@ public class Graph {
     private int mVertNum;
     //Adjacency list representation for graph:
     private ArrayList<Set<Integer>> mAdj;
+    //Random number generator
+    Random r = new Random();
+    private Set<Edge> mEdge = new HashSet<Edge>();
+    List sortedList;
 
     //Initializes an empty graph with vertices and 0 edges:
     public Graph(int vertNum) throws IllegalArgumentException {
@@ -39,6 +43,22 @@ public class Graph {
         validateVertex(w);
         mAdj.get(v).add(w);
         mAdj.get(w).add(v);
+       // addWeight(v, w);
+        int rand = r.nextInt(mVertNum)+1;
+        Edge e = new Edge(rand, v, w);
+        //check previousm
+        boolean noduplicate = true;
+        if(mEdge.isEmpty()) mEdge.add(e);
+        for (Edge chk:mEdge) {
+            if((chk.v1 == w & chk.v2 == v))
+                noduplicate = false;
+        }
+        if(noduplicate) mEdge.add(e);
+    }
+
+    public void sortWeight(){
+        sortedList = new ArrayList(mEdge);
+        Collections.sort(sortedList);
     }
 
     //Returns the vertices adjacent to vertex in RANDOM ORDER:
