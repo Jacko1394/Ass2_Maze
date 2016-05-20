@@ -37,14 +37,19 @@ public class Graph {
             throw new IndexOutOfBoundsException("vertex " + v + " is not between 0 and " + (mVertNum-1));
     }
 
-    //Adds the undirected edge v-w to this graph:
     public void addEdge(int v, int w) {
+		mAdj.get(v).add(w);
+		mAdj.get(w).add(v);
+    }
+
+    //Adds the undirected edge v-w to this graph:
+    public void addWeightedEdge(int v, int w) {
         validateVertex(v);
         validateVertex(w);
         mAdj.get(v).add(w);
         mAdj.get(w).add(v);
        // addWeight(v, w);
-        int rand = r.nextInt(mVertNum)+1;
+        int rand = r.nextInt(mVertNum) + 1;
         Edge e = new Edge(rand, v, w);
         //check previousm
         boolean noduplicate = true;

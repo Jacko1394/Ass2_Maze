@@ -71,8 +71,6 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator {
 			}
 		}
 
-		System.out.println("NUMCELLS: " + cells.size());
-
 		//Loops thru cells, adds edges to graph based on cell neighbors:
 		for(Cell c : cells) {
 			//Loop thru 4 sides:
@@ -85,6 +83,8 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator {
 			if(c.tunnelTo != null) {
 				g.addEdge(cells.indexOf(c), cells.indexOf(c.tunnelTo));
 			}
+			System.out.println("3: " + cells.indexOf(c));
+			//lots of looping here
 		}
 		return g;
 	}
