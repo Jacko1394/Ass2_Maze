@@ -8,15 +8,15 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator {
 
 	//Variables:
 	Random r = new Random();  //Random number generator
+
+	int[] sides;  //Array of the cell side int consts, (diff for normal/hex)
 	int numOfCells = 0;  //Number of cells in the maze
 	int firstCell = 0;  //Randomly selected starting cell for DFS
-	ArrayList<Cell> cells = new ArrayList<>();  //Arraylist of the maze cells
-	ArrayList<Integer> DFSList = new ArrayList<>();  //Array list of DFS order
-	Graph g = null;  //Graph structure to represent maze cell verticies
 	boolean[] visited;  //Array of marked cells
 
-	//Constants:
-	int[] sides;
+	Graph g = null;  //Graph structure to represent maze cell verticies
+	ArrayList<Cell> cells = new ArrayList<>();  //Arraylist of the maze cells
+	Stack<Cell> theStack = new Stack<>(); //stack dfs for big big mazes xD
 
 	@Override
 	public void generateMaze(Maze maze) {
@@ -36,8 +36,7 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator {
 			visited[i] = false;
 		}
 
-		runDFS();
-		carveMaze(maze);
+		runStackDFS();
 	}
 
 	//Function that deletes a wall between 2 given cells:
@@ -49,15 +48,6 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator {
 				c2.wall[Maze.oppoDir[sides[s]]].present = false;
 				break;
 			}
-		}
-	}
-
-	//Makes the maze based on the DFS result:
-	private void carveMaze(Maze maze) {
-		Cell c = cells.get(firstCell);
-		for(int i : DFSList) {
-			deleteWall(c, cells.get(i));
-			c = cells.get(i);
 		}
 	}
 
@@ -83,42 +73,50 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator {
 			if(c.tunnelTo != null) {
 				g.addEdge(cells.indexOf(c), cells.indexOf(c.tunnelTo));
 			}
-			System.out.println("3: " + cells.indexOf(c));
-			//lots of looping here
 		}
 		return g;
 	}
 
-	//Run the depth first search traversal upon the graph:
-	private void runDFS() {
-		//Add first cell, mark as visited:
-		DFSList.add(firstCell);
-		visited[firstCell] = true;
-		//Get neighbors:
-		int n[] = g.neighbours(firstCell);
+	//Runs the stack based implementation of DFS algorithm:
+	private void runStackDFS() {
+		//Variables:
+		int cellCount = 1;
+		boolean neighbors;
+		//Add first cell (random) to stack, set as visited:
+		theStack.push(cells.get(firstCell));
+		visited[cells.indexOf(theStack.peek())] = true;
 
-		//Main DFS loop:
-		for(int i : n) {
-			if(!visited[i]) {dfs(i);}
-		}
-	}
+		//Loop until all cells are accounted for:
+		while(cellCount < numOfCells) {
+			//Get neighbors of top of stack cell:
+			int n[] = g.neighbours(cells.indexOf(theStack.peek()));
+			neighbors = false;  //Reset to false
 
-	//Recursive DFS method:
-	private void dfs(int i) {
-		//Add cell to list, mark as visited:
-		DFSList.add(i);
-		visited[i] = true;
+			//Check for tunnel:
+			if(theStack.peek().tunnelTo != null) {
+				//Check if tunnel cell has been visited:
+				int t = cells.indexOf(theStack.peek().tunnelTo);
+				if(!visited[t]) {
+					theStack.push(cells.get(t));
+					visited[t] = true;
+					++cellCount;
+					continue;
+				}
+			}
 
-		if(cells.get(i).tunnelTo != null) {
-			int j = cells.indexOf(cells.get(i).tunnelTo);
-			if(!visited[j]) {dfs(j);}
-		}
-		//Get neighbors:
-		int n[] = g.neighbours(i);
-
-		for (int j : n) {
-			if(!visited[j]) {dfs(j);}
-			if(DFSList.get(DFSList.size() - 1) != i) {DFSList.add(i);}
+			//If no tunnel, loop thru neighbor cells:
+			for(int i : n) {
+				if(!visited[i]) {
+					deleteWall(theStack.peek(), cells.get(i));
+					theStack.push(cells.get(i));
+					visited[i] = true;
+					++cellCount;
+					neighbors = true;
+					break;
+				}
+			}
+			//If all neighbors have been visited, pop that cell off the stack:
+			if(!neighbors) {theStack.pop();}
 		}
 	}
 

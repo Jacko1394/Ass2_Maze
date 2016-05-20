@@ -1,10 +1,8 @@
 package graph;
 
-/**
- * Created by nur on 18/05/16.
- */
-class Edge implements Comparable<Edge>
-{
+//Created by nur on 18/05/16
+
+class Edge implements Comparable<Edge> {
     int wt, v1, v2;
 
     Edge(int wt, int v1, int v2)
@@ -28,4 +26,4 @@ class Edge implements Comparable<Edge>
         return String.format("Vertex1:%d \t Vertex2:%d \t Cost:%d\n", v1,v2,wt);
 
     }
-}
+}//END OF FILE

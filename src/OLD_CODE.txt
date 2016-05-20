@@ -1,0 +1,43 @@
+	//Makes the maze based on the DFS result:
+	private void carveMaze(Maze maze) {
+		Cell c = cells.get(firstCell);
+		for(int i : DFSList) {
+			deleteWall(c, cells.get(i));
+			c = cells.get(i);
+		}
+	}
+
+	//Run the depth first search traversal upon the graph:
+	private void runDFS() {
+		//Add first cell, mark as visited:
+		DFSList.add(firstCell);
+		visited[firstCell] = true;
+		//Get neighbors:
+		int n[] = g.neighbours(firstCell);
+
+		//Main DFS loop:
+		for(int i : n) {
+			if(!visited[i]) {dfs(i);}
+		}
+	}
+
+	//Recursive DFS method:
+	private void dfs(int i) {
+		//Add cell to list, mark as visited:
+		DFSList.add(i);
+		visited[i] = true;
+
+		if(cells.get(i).tunnelTo != null) {
+			int j = cells.indexOf(cells.get(i).tunnelTo);
+			if(!visited[j]) {dfs(j);}
+		}
+		//Get neighbors:
+		int n[] = g.neighbours(i);
+
+		for (int j : n) {
+			if(!visited[j]) {dfs(j);}
+			if(DFSList.get(DFSList.size() - 1) != i) {DFSList.add(i);}
+		}
+	}
+
+
