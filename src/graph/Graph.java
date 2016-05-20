@@ -8,8 +8,9 @@ public class Graph {
     private ArrayList<Set<Integer>> mAdj;
     //Random number generator
     Random r = new Random();
-    private Set<Edge> mEdge = new HashSet<Edge>();
-    List sortedList;
+    public Set<Edge> mEdge = new HashSet<Edge>();
+    //private Set<Edge> sortedList = new HashSet<Edge>();
+    public ArrayList<Edge> sortedArrayList;
 
     //Initializes an empty graph with vertices and 0 edges:
     public Graph(int vertNum) throws IllegalArgumentException {
@@ -38,6 +39,8 @@ public class Graph {
     }
 
     public void addEdge(int v, int w) {
+        validateVertex(v);
+        validateVertex(w);
 		mAdj.get(v).add(w);
 		mAdj.get(w).add(v);
     }
@@ -50,7 +53,7 @@ public class Graph {
         mAdj.get(w).add(v);
        // addWeight(v, w);
         int rand = r.nextInt(mVertNum) + 1;
-        Edge e = new Edge(rand, v, w);
+        Edge e = new Edge(v, w, rand);
         //check previousm
         boolean noduplicate = true;
         if(mEdge.isEmpty()) mEdge.add(e);
@@ -62,8 +65,14 @@ public class Graph {
     }
 
     public void sortWeight(){
-        sortedList = new ArrayList(mEdge);
-        Collections.sort(sortedList);
+        sortedArrayList = new ArrayList(mEdge);
+        Collections.sort(sortedArrayList);
+        //sortedList = new HashSet<>();
+        /*for (Edge e :mEdge) {
+            sortedList.add(e);
+        }
+        Set set = new HashSet(sortedList);*/
+        System.out.println();
     }
 
     //Returns the vertices adjacent to vertex in RANDOM ORDER:
