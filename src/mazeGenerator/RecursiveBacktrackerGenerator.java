@@ -16,8 +16,7 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator {
 	boolean[] visited;  //Array of marked cells
 
 	//Constants:
-	static int[] sides;
-	//neat
+	int[] sides;
 
 	@Override
 	public void generateMaze(Maze maze) {
@@ -77,9 +76,9 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator {
 		//Loops thru cells, adds edges to graph based on cell neighbors:
 		for(Cell c : cells) {
 			//Loop thru 4 sides:
-			for(int s = 0; s < sides.length; ++s) {
-				if(c.neigh[sides[s]] != null) {
-					g.addEdge(cells.indexOf(c), cells.indexOf(c.neigh[sides[s]]));
+			for(int s : sides) {
+				if(c.neigh[s] != null) {
+					g.addEdge(cells.indexOf(c), cells.indexOf(c.neigh[s]));
 				}
 			}
 			//For tunnels:
