@@ -6,6 +6,8 @@ public class Graph {
     private int mVertNum;
     //Adjacency list representation for graph:
     private ArrayList<Set<Integer>> mAdj;
+    //speeding up adding weight
+    private Set<Integer> unique = new HashSet<>();
     //Random number generator
     Random r = new Random();
     public Set<Edge> mEdge = new HashSet<Edge>();
@@ -53,16 +55,34 @@ public class Graph {
         mAdj.get(v).add(w);
         mAdj.get(w).add(v);
        // addWeight(v, w);
+        //
+
+/*        if(unique.isEmpty()){
+            unique.add(v);
+            unique.add(w);
+            int rand = r.nextInt(mVertNum) + 1;
+            Edge e = new Edge(v, w, rand);
+            mEdge.add(e);
+        }*/
+        //faster with set
         int rand = r.nextInt(mVertNum) + 1;
         Edge e = new Edge(v, w, rand);
-        //check previousm
+        if (!(unique.contains(v) & unique.contains(w))){
+            unique.add(v);
+            //unique.add(w);
+            mEdge.add(e);
+        }
+        //
+/*        int rand = r.nextInt(mVertNum) + 1;
+        Edge e = new Edge(v, w, rand);
+        //check previous
         boolean noduplicate = true;
-        if(mEdge.isEmpty()) mEdge.add(e);
+        //if(mEdge.isEmpty()) mEdge.add(e);
         for (Edge chk:mEdge) {
             if((chk.v1 == w & chk.v2 == v))
                 noduplicate = false;
         }
-        if(noduplicate) mEdge.add(e);
+        if(noduplicate) mEdge.add(e);*/
     }
 
     public void sortWeight(){
