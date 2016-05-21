@@ -11,14 +11,9 @@ public class KruskalGenerator implements MazeGenerator {
 	int numOfCells = 0;  //Number of cells in the maze
 	int firstCell = 0;  //Randomly selected starting cell for DFS
 	ArrayList<Cell> cells = new ArrayList<>();  //Arraylist of the maze cells
-	ArrayList<Integer> DFSList = new ArrayList<>();  //Array list of DFS order
 	Graph g = null;  //Graph structure to represent maze cell verticies
-	boolean[] visited= {false, false, false, false, false};// = null;  //Array of marked cells
-	ArrayList minSpanTree = new ArrayList<>();
-	//ArrayList<Edge> newSort = new ArrayList<>();
-	//private Set<Object> sortedList = new HashSet<>();
-	//Edge check;
-
+	boolean[] visited; //Array of marked cells
+	ArrayList<Edge> minSpanTree = new ArrayList<Edge>();
 	//Constants:
 	final static int[] sides = {Maze.NORTH, Maze.SOUTH, Maze.EAST, Maze.WEST};
 
@@ -38,86 +33,6 @@ public class KruskalGenerator implements MazeGenerator {
 		runKRSKL();
 		//carveMaze(maze);
 	}
-
-	//Run the depth first search traversal upon the graph:
-	private void runKRSKL() {
-		System.out.println();
-		deleteWall(cells.get(0), cells.get(1));
-		//deleteWall(cells.get(firstCell));
-
-	}
-
-	//Function that deletes a wall between 2 given cells:
-	private void deleteWall(Cell c1, Cell c2) {
-		//Loop thru 4 sides:
-		for(int s = 0; s < sides.length; ++s) {
-			if(c1.neigh[sides[s]] == c2) {
-				c1.wall[sides[s]].present = false;
-				c2.wall[Maze.oppoDir[sides[s]]].present = false;
-				break;
-			}
-		}
-	}
-
-
-	//make a forest of empty tree with vertex itsefl
-/*		HashMap<Integer,Set<Integer>> forest = new HashMap<Integer,Set<Integer>>();
-		for(int i=0; i<numOfCells; i++)
-		{
-			//Each set stores the known vertices reachable from this vertex
-			//initialize with it self.
-			Set<Integer> vs = new HashSet<Integer>();
-			vs.add(i);
-			forest.put(i, vs);
-		}*/
-
-/*		for (int i=0; i<g.sortedArrayList.size(); i++) {
-			newSort.add((Edge) g.sortedArrayList.get(i));
-		}*/
-
-/*		while(true) //while you haven't visited all the vertices at least once
-		{
-			//boolean add = sortedList.add(g.sortedArrayList.get(0));
-			//check.add((Edge) g.sortedArrayList.get(0));
-            	//sortedList.add(g.mEdge.remove());
-        	//}
-
-			System.out.println();
-			check = newSort.remove(0);//pop
-
-			Set<Integer> visited1 = forest.get(check.);
-			Set<Integer> visited2 = forest.get(check);
-			if(visited1.equals(visited2))
-				continue;
-			minSpanTree.add(check);
-			visited1.addAll(visited2);
-			for(Integer i : visited1)
-			{
-				forest.put(i, visited1);
-			}
-			//if(visited1.size()==vertices.length)
-				break;
-		}*/
-/*	//Function that deletes a wall between 2 given cells:
-	private void deleteWall(Cell c1, Cell c2) {
-		//Loop thru 4 sides:
-		for(int s = 0; s < sides.length; ++s) {
-			if(c1.neigh[sides[s]] == c2) {
-				c1.wall[sides[s]].present = false;
-				c2.wall[Maze.oppoDir[sides[s]]].present = false;
-				break;
-			}
-		}
-	}*/
-
-/*	//Makes the maze based on the DFS result:
-	private void carveMaze(Maze maze) {
-		Cell c = cells.get(firstCell);
-		for(int i : DFSList) {
-			deleteWall(c, cells.get(i));
-			c = cells.get(i);
-		}
-	}*/
 
 	//Maps all maze cells to graph as integers, and links neighboring cells:
 	private Graph makeGraph(Maze maze) {
@@ -143,6 +58,62 @@ public class KruskalGenerator implements MazeGenerator {
 			}
 		}
 		return g;
+	}
+
+	//Run the depth first search traversal upon the graph:
+	private void runKRSKL() {
+		System.out.println();
+
+		HashMap<Integer,Set<Integer>> forest = new HashMap<Integer,Set<Integer>>();
+		for(int i=0; i<numOfCells; i++)
+		{
+			//Each set stores the known vertices reachable from this vertex
+			//initialize with it self.
+			Set<Integer> vs = new HashSet<Integer>();
+			vs.add(i);
+			forest.put(i, vs);
+		}
+
+		ArrayList<Edge> minSpanTree = new ArrayList<Edge>();
+
+		for ( Edge e : g.sortedArrayList) {
+			int homeCell = e.getV1();
+			int nextCell = e.getV2();
+
+			Set<Integer> visited1 = forest.get(homeCell);
+			Set<Integer> visited2 = forest.get(nextCell);
+			if(visited1.equals(visited2))
+				continue;
+			deleteWall(cells.get(homeCell), cells.get(nextCell));
+			minSpanTree.add(e);
+			visited1.addAll(visited2);
+			for(Integer i : visited1)
+			{
+				forest.put(i, visited1);
+			}
+			//if(visited1.size()==vertices.length)
+			//	break;
+			System.out.println();
+/*			if(!(visited[homeCell] & visited[nextCell])){
+				deleteWall(cells.get(homeCell), cells.get(nextCell));
+				visited[homeCell] =true;
+				visited[nextCell] =true;
+				System.out.println(homeCell + "--" + nextCell);
+			}*/
+		}
+
+	}
+
+	//Function that deletes a wall between 2 given cells:
+	private void deleteWall(Cell c1, Cell c2) {
+		//Loop thru 4 sides:
+		for(int s = 0; s < sides.length; ++s) {
+			if(c1.neigh[sides[s]] == c2) {
+				c1.wall[sides[s]].present = false;
+				c2.wall[Maze.oppoDir[sides[s]]].present = false;
+				break;
+			}
+		}
 	}
 
 } // end of class KruskalGenerator

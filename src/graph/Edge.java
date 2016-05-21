@@ -14,6 +14,17 @@ public class Edge implements Comparable<Edge>
         this.wt=wt;
     }
 
+    public int getV1(){
+        return v1;
+    }
+
+    public int getV2(){
+        return v2;
+    }
+
+    public int getWt(){
+        return wt;
+    }
     @Override
     public int compareTo(Edge o) {
         Edge e1 = (Edge)o;
