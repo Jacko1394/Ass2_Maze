@@ -46,9 +46,10 @@ public class Graph {
     }
 
     //Adds the undirected edge v-w to this graph:
+    //this method takes long time for 200 200 maze.
     public void addWeightedEdge(int v, int w) {
-        validateVertex(v);
-        validateVertex(w);
+/*        validateVertex(v);
+        validateVertex(w);*/
         mAdj.get(v).add(w);
         mAdj.get(w).add(v);
        // addWeight(v, w);

@@ -13,7 +13,6 @@ public class KruskalGenerator implements MazeGenerator {
 	ArrayList<Cell> cells = new ArrayList<>();  //Arraylist of the maze cells
 	Graph g = null;  //Graph structure to represent maze cell verticies
 	boolean[] visited; //Array of marked cells
-	ArrayList<Edge> minSpanTree = new ArrayList<Edge>();
 	//Constants:
 	final static int[] sides = {Maze.NORTH, Maze.SOUTH, Maze.EAST, Maze.WEST};
 
@@ -31,7 +30,7 @@ public class KruskalGenerator implements MazeGenerator {
 		g.sortWeight();
 		System.out.println("Running Kruskal...");
 		runKRSKL();
-		//carveMaze(maze);
+		System.out.println();
 	}
 
 	//Maps all maze cells to graph as integers, and links neighboring cells:
@@ -45,6 +44,7 @@ public class KruskalGenerator implements MazeGenerator {
 		}
 
 		//Loops thru cells, adds edges to graph based on cell neighbors:
+		//this takes long time for 200 200 cells 16 mins
 		for(Cell c : cells) {
 			//Loop thru 4 sides:
 			for(int s : sides) {
@@ -62,46 +62,31 @@ public class KruskalGenerator implements MazeGenerator {
 
 	//Run the depth first search traversal upon the graph:
 	private void runKRSKL() {
-		System.out.println();
-
-		HashMap<Integer,Set<Integer>> forest = new HashMap<Integer,Set<Integer>>();
+		HashMap<Integer,Set<Integer>> forest = new HashMap<>();
 		for(int i=0; i<numOfCells; i++)
 		{
 			//Each set stores the known vertices reachable from this vertex
 			//initialize with it self.
-			Set<Integer> vs = new HashSet<Integer>();
+			Set<Integer> vs = new HashSet<>();
 			vs.add(i);
 			forest.put(i, vs);
 		}
 
-		ArrayList<Edge> minSpanTree = new ArrayList<Edge>();
-
 		for ( Edge e : g.sortedArrayList) {
 			int homeCell = e.getV1();
 			int nextCell = e.getV2();
-
 			Set<Integer> visited1 = forest.get(homeCell);
 			Set<Integer> visited2 = forest.get(nextCell);
 			if(visited1.equals(visited2))
 				continue;
-			deleteWall(cells.get(homeCell), cells.get(nextCell));
-			minSpanTree.add(e);
 			visited1.addAll(visited2);
 			for(Integer i : visited1)
 			{
 				forest.put(i, visited1);
 			}
-			//if(visited1.size()==vertices.length)
-			//	break;
-			System.out.println();
-/*			if(!(visited[homeCell] & visited[nextCell])){
-				deleteWall(cells.get(homeCell), cells.get(nextCell));
-				visited[homeCell] =true;
-				visited[nextCell] =true;
-				System.out.println(homeCell + "--" + nextCell);
-			}*/
+			deleteWall(cells.get(homeCell), cells.get(nextCell));
+			System.out.println(homeCell);
 		}
-
 	}
 
 	//Function that deletes a wall between 2 given cells:
