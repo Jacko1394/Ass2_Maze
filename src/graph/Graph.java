@@ -6,8 +6,9 @@ public class Graph {
     private int mVertNum;
     //Adjacency list representation for graph:
     private ArrayList<Set<Integer>> mAdj;
-    //speeding up adding weight
-    private Set<Integer> unique = new HashSet<>();
+    //speeding up adding weight to edge
+    private HashSet<Integer> unique = new HashSet<>();
+    //private HashSet<Integer> VW = new HashSet<>();
     //Random number generator
     Random r = new Random();
     public Set<Edge> mEdge = new HashSet<Edge>();
@@ -48,51 +49,22 @@ public class Graph {
     }
 
     //Adds the undirected edge v-w to this graph:
-    //this method takes long time for 200 200 maze.
     public void addWeightedEdge(int v, int w) {
-/*        validateVertex(v);
-        validateVertex(w);*/
         mAdj.get(v).add(w);
         mAdj.get(w).add(v);
-       // addWeight(v, w);
-        //
-
-/*        if(unique.isEmpty()){
-            unique.add(v);
-            unique.add(w);
-            int rand = r.nextInt(mVertNum) + 1;
-            Edge e = new Edge(v, w, rand);
-            mEdge.add(e);
-        }*/
-        //faster with set
+        //System.out.println((v*w)+2*(v+w));
         int rand = r.nextInt(mVertNum) + 1;
         Edge e = new Edge(v, w, rand);
-        if (!(unique.contains(v) & unique.contains(w))){
-            unique.add(v);
-            //unique.add(w);
+        //(v*w)+2*(v+w) ensures uniqueness of edges
+        if (!(unique.contains((v*w)+2*(v+w)))){
+            unique.add((v*w)+2*(v+w));
             mEdge.add(e);
         }
-        //
-/*        int rand = r.nextInt(mVertNum) + 1;
-        Edge e = new Edge(v, w, rand);
-        //check previous
-        boolean noduplicate = true;
-        //if(mEdge.isEmpty()) mEdge.add(e);
-        for (Edge chk:mEdge) {
-            if((chk.v1 == w & chk.v2 == v))
-                noduplicate = false;
-        }
-        if(noduplicate) mEdge.add(e);*/
     }
 
     public void sortWeight(){
         sortedArrayList = new ArrayList(mEdge);
         Collections.sort(sortedArrayList);
-        //sortedList = new HashSet<>();
-        /*for (Edge e :mEdge) {
-            sortedList.add(e);
-        }
-        Set set = new HashSet(sortedList);*/
         System.out.println();
     }
 
