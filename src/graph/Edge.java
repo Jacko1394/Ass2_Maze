@@ -25,18 +25,12 @@ public class Edge implements Comparable<Edge>
     public int getWt(){
         return wt;
     }
+
     @Override
     public int compareTo(Edge o) {
         Edge e1 = (Edge)o;
         if(e1.wt==this.wt)
             return 0;
         return e1.wt < this.wt ? 1 : -1;
-    }
-
-    @Override
-    public String toString()
-    {
-        return String.format("Vertex1:%d \t Vertex2:%d \t Cost:%d\n", v1,v2,wt);
-
     }
 }

@@ -30,7 +30,6 @@ public class KruskalGenerator implements MazeGenerator {
 		g.sortWeight();
 		System.out.println("Running Kruskal...");
 		runKRSKL();
-		System.out.println();
 	}
 
 	//Maps all maze cells to graph as integers, and links neighboring cells:
@@ -44,7 +43,6 @@ public class KruskalGenerator implements MazeGenerator {
 		}
 
 		//Loops thru cells, adds edges to graph based on cell neighbors:
-		//this takes long time for 200 200 cells 16 mins
 		for(Cell c : cells) {
 			//Loop thru 4 sides:
 			for(int s : sides) {
