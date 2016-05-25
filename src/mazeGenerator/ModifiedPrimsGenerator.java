@@ -2,8 +2,6 @@ package mazeGenerator;
 
 import graph.*;
 import maze.*;
-
-import java.lang.reflect.Array;
 import java.util.*;
 
 
@@ -19,13 +17,8 @@ public class ModifiedPrimsGenerator implements MazeGenerator {
 	//Constants:
 	final static int[] sides = {Maze.NORTH, Maze.SOUTH, Maze.EAST, Maze.WEST};
 	//set for frontier
-	//private ArrayList<Cell> allCell;
-	//private ArrayList<Cell> Z = new ArrayList<>();
-	private ArrayList<Cell> F;
-	//
 	private ArrayList<Edge> allCell =new ArrayList<>();
-    //private ArrayList<Edge> Z =new ArrayList<>();
-    //private ArrayList<Edge> F;
+
 
     public ModifiedPrimsGenerator() {
     }
@@ -75,7 +68,9 @@ public class ModifiedPrimsGenerator implements MazeGenerator {
 		return g;
 	}
 
-	//Run the depth first search traversal upon the graph:
+	//starting with random cell and then visiting neighboring cell with lowest edge weight
+    //Collections.shuffle(allCell) randomizes the starting point of cell #.
+    //Z is the set where visited cell are recorded
 	private void runModPrims() {
         HashMap<Integer,Set<Integer>> Z = new HashMap<>();
         for(int i=0; i<numOfCells; i++)
@@ -88,9 +83,11 @@ public class ModifiedPrimsGenerator implements MazeGenerator {
         }
         allCell.addAll(g.mEdge);
         Collections.shuffle(allCell);
+        //allcell are randomised. so each time pick a random cell
         for ( Edge e : allCell) {
             int homeCell = e.getV1();
             int nextCell = e.getV2();
+            //checking visited to avoid loop
             Set<Integer> visited1 = Z.get(homeCell);
             Set<Integer> visited2 = Z.get(nextCell);
             if(visited1.equals(visited2))
@@ -101,62 +98,8 @@ public class ModifiedPrimsGenerator implements MazeGenerator {
                 Z.put(i, visited1);
             }
             deleteWall(cells.get(homeCell), cells.get(nextCell));
-            System.out.println(homeCell);
+            //System.out.println(homeCell);
         }
-
-
-
-/*		weightCell.addAll(g.mEdge);
- 		while (!weightCell.isEmpty()){
-            int randCell = r.nextInt(weightCell.size());
-            Edge e = weightCell.get(randCell);
-            Z.add(weightCell.remove(randCell));
-            int home = e.getV1();
-            int next = getneighbour(home);
-            deleteWall(cells.get(home), cells.get(next));
-        }*/
-
-        /*
-		for (Edge e: g.mEdge) {
-
-		}
-
-		allCell = new ArrayList<>(cells);
-		while (!allCell.isEmpty()){
-			int start = r.nextInt(allCell.size());
-			Cell homeCell = allCell.get(start);
-			Z.add(homeCell);
-			allCell.remove(homeCell);
-			F = new ArrayList<>();
-			for (Cell c:homeCell.neigh) {
-				if(c != null & !Z.contains(c)){
-					F.add(c);
-				}
-			}
-			if (!F.isEmpty()) {
-				int randFrontier = r.nextInt(F.size());
-				deleteWall(homeCell, F.get(randFrontier));
-			}
-
-		}*/
-	}
-
-	private int getneighbour(int home) {
-		ArrayList<Edge> neighbour = new ArrayList();
-		for (Edge e: g.mEdge) {
-			if(e.getV1() == home){
-                neighbour.add(e);
-            }
-            if(e.getV2() == home){
-                neighbour.add(e);
-            }
-		}
-        Collections.sort(neighbour);
-        //int rand = r.nextInt(neighbour.size());
-        if(neighbour.get(0).getV2()==home)
-            return neighbour.get(0).getV1();
-        else
-            return neighbour.get(0).getV2();
 	}
 
 	//Function that deletes a wall between 2 given cells:

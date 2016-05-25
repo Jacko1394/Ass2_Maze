@@ -58,7 +58,7 @@ public class KruskalGenerator implements MazeGenerator {
 		return g;
 	}
 
-	//Run the depth first search traversal upon the graph:
+	//this will generate the maze based on the ascending weighted edge.
 	private void runKRSKL() {
 		HashMap<Integer,Set<Integer>> forest = new HashMap<>();
 		for(int i=0; i<numOfCells; i++)
